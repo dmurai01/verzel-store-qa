@@ -1,0 +1,1062 @@
+{
+    "info": {
+        "_postman_id": "30fae342-7a07-43b7-bcf8-76b4fd4b2483",
+        "name": "Verzel Store - Testes de API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "44501716"
+    },
+    "item": [
+        {
+            "name": "01 - US VZS-142 (Cupons e Frete Grátis)",
+            "item": [
+                {
+                    "name": "POST /api/carrinho/calcular - Cálculo de frete fixo e faltante (CT-US-API-01)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 200 OK\", function() {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Cobrança de frete fixo de R$ 19,90 e frete grátis falso\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.subtotal).to.eql(189.90);\r\n    pm.expect(resposta.freteGratis).to.be.false; \r\n    pm.expect(resposta.frete).to.eql(19.90); \r\n    pm.expect(resposta.valorFaltanteFreteGratis).to.eql(10.10); \r\n    pm.expect(resposta.total).to.eql(209.80);\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n  \"itens\": [\r\n    { \"produtoId\": \"P003\", \"quantidade\": 1 }\r\n  ]\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/carrinho/calcular - Cálculo de frete grátis (CT-US-API-02)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 200 OK\", function() {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Sem Cobrança de frete fixo de R$ 19,90 e frete grátis true\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.subtotal).to.eql(229.90);\r\n    pm.expect(resposta.freteGratis).to.be.true; \r\n    pm.expect(resposta.frete).to.eql(0.00); \r\n    pm.expect(resposta.valorFaltanteFreteGratis).to.eql(0.00); \r\n    pm.expect(resposta.total).to.eql(229.90);\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n  \"itens\": [\r\n    { \"produtoId\": \"P007\", \"quantidade\": 1 }\r\n  ]\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/carrinho/calcular - Cálculo de desconto de 10% com cupom válido BEMVINDO10 (CT-US-API-03)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 200 OK\", function() {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Cupom com desconto aplicado\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.subtotal).to.eql(239.70);\r\n    pm.expect(resposta.freteGratis).to.be.true; \r\n    pm.expect(resposta.cupom.aplicado).to.be.true; \r\n    pm.expect(resposta.frete).to.eql(0.00); \r\n    pm.expect(resposta.valorFaltanteFreteGratis).to.eql(0.00); \r\n    pm.expect(resposta.desconto).to.eql(23.97); \r\n    pm.expect(resposta.total).to.eql(215.73);\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 2 }\r\n  ],\r\n  \"cupom\": \"BEMVINDO10\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/carrinho/calcular - Normalização de espaços e case-sensitive na rota de cálculo (CT-US-API-04)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 200 OK\", function() {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Cupom aplicado com letras minusculas\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.subtotal).to.eql(239.70);\r\n    pm.expect(resposta.freteGratis).to.be.true; \r\n    pm.expect(resposta.cupom.aplicado).to.be.true; \r\n    pm.expect(resposta.frete).to.eql(0.00); \r\n    pm.expect(resposta.valorFaltanteFreteGratis).to.eql(0.00); \r\n    pm.expect(resposta.desconto).to.eql(23.97); \r\n    pm.expect(resposta.total).to.eql(215.73);\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 2 }\r\n  ],\r\n  \"cupom\": \"bemvindo10\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/carrinho/calcular - Comportamento tolerante para cupom inválido no cálculo do carrinho (CT-US-API-05)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 200 OK\", function() {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Cupom Inválido\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.subtotal).to.eql(239.70);\r\n    pm.expect(resposta.freteGratis).to.be.true; \r\n    pm.expect(resposta.cupom.aplicado).to.be.false; \r\n    pm.expect(resposta.frete).to.eql(0.00); \r\n    pm.expect(resposta.valorFaltanteFreteGratis).to.eql(0.00); \r\n    pm.expect(resposta.desconto).to.eql(0.00); \r\n    pm.expect(resposta.total).to.eql(239.70);\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 2 }\r\n  ],\r\n  \"cupom\": \"CUPOM_INVALIDO\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/carrinho/calcular - Comportamento tolerante para cupom expirado no cálculo do carrinho (CT-US-API-06)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 200 OK\", function() {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Cupom Expirado\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.subtotal).to.eql(239.70);\r\n    pm.expect(resposta.freteGratis).to.be.true; \r\n    pm.expect(resposta.cupom.aplicado).to.be.false;\r\n    pm.expect(resposta.cupom.mensagem).to.eql(\"Cupom expirado.\");\r\n    pm.expect(resposta.frete).to.eql(0.00); \r\n    pm.expect(resposta.valorFaltanteFreteGratis).to.eql(0.00); \r\n    pm.expect(resposta.desconto).to.eql(0.00); \r\n    pm.expect(resposta.total).to.eql(239.70);\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 2 }\r\n  ],\r\n  \"cupom\": \"VERAO2026\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/carrinho/calcular - Rejeição na API ao exceder 5 unidades de produto no carrinho (CT-US-API-07)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 422\", function() {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Rejeição ao exceder 5 unidades de produto no carrinho\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.erro.codigo).to.eql(\"QUANTIDADE_INVALIDA\");\r\n    pm.expect(resposta.erro.mensagem).to.eql(\"A quantidade deve ser um número inteiro maior ou igual a 1.\");\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 6 }\r\n  ],\r\n  \"cupom\": \"VERAO2026\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/pedidos - Rejeição estrita com 422 ao criar pedido com cupom inexistente (CT-US-API-08)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 422\", function() {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Rejeição ao criar pedido com cupom inválido\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.erro.codigo).to.eql(\"CUPOM_INVALIDO\");\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"cliente\": {\r\n    \"nome\": \"Dani Maria\",\r\n    \"email\": \"teste@exemplo.com\",\r\n    \"cep\": \"01310-100\"\r\n  },\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 4 }\r\n  ],\r\n  \"cupom\": \"CUPOM_INVALIDO\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/pedidos -  Rejeição estrita com 422 ao criar pedido com cupom expirado (CT-US-API-09)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 422\", function() {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Rejeição ao criar pedido com cupom expirado\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.erro.codigo).to.eql(\"CUPOM_EXPIRADO\");\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"cliente\": {\r\n    \"nome\": \"Dani Maria\",\r\n    \"email\": \"teste@exemplo.com\",\r\n    \"cep\": \"01310-100\"\r\n  },\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 4 }\r\n  ],\r\n  \"cupom\": \"VERAO2026\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "POST /api/pedidos -  Rejeição estrita com 422 ao criar pedido com item excedendo 5 unidades (CT-US-API-10)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code é 422\", function() {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Rejeição ao criar pedido com item excedendo 5 unidades\", function () {\r\n    const resposta = pm.response.json();\r\n\r\n    pm.expect(resposta.erro.codigo).to.eql(\"QUANTIDADE_MAXIMA_EXCEDIDA\");\r\n})"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"cliente\": {\r\n    \"nome\": \"Dani Maria\",\r\n    \"email\": \"teste@exemplo.com\",\r\n    \"cep\": \"01310-100\"\r\n  },\r\n  \"itens\": [\r\n    { \"produtoId\": \"P002\", \"quantidade\": 1 },\r\n    { \"produtoId\": \"P004\", \"quantidade\": 6 }\r\n  ],\r\n  \"cupom\": \"BEMVINDO10\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "02 - Regressão e Contratos",
+            "item": [
+                {
+                    "name": "CT-REG-01 - Criacao de Pedido com Sucesso (201)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 201 Created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Numero do pedido no padrao VZ-000000\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.numero).to.match(/^VZ-\\d{6}$/);",
+                                    "    pm.expect(res).to.have.property(\"criadoEm\");",
+                                    "    pm.expect(res.total).to.eql(109.9);",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"cliente\": {\n    \"nome\": \"Maria Silva\",\n    \"email\": \"maria@teste.com\",\n    \"cep\": \"01310-100\"\n  },\n  \"itens\": [\n    {\n      \"produtoId\": \"P005\",\n      \"quantidade\": 1\n    }\n  ],\n  \"cupom\": \"BEMVINDO10\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        },
+                        "description": "Criacao de pedido com status 201 e codigo VZ-000000."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-02 - Rejeicao Cliente sem Sobrenome (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {\n    pm.response.to.have.status(422);\n});\n\npm.test(\"Erro DADOS_INVALIDOS no campo nome\", function () {\n    const res = pm.response.json();\n    pm.expect(res.erro.codigo).to.eql(\"DADOS_INVALIDOS\");\n});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"cliente\": {\n    \"nome\": \"Maria\",\n    \"email\": \"maria@teste.com\",\n    \"cep\": \"01310-100\"\n  },\n  \"itens\": [\n    {\n      \"produtoId\": \"P001\",\n      \"quantidade\": 1\n    }\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        },
+                        "description": "Rejeicao para cliente sem sobrenome com 422."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-03 - Rejeicao E-mail Invalido (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {\n    pm.response.to.have.status(422);\n});\n\npm.test(\"Erro DADOS_INVALIDOS no campo email\", function () {\n    const res = pm.response.json();\n    pm.expect(res.erro.codigo).to.eql(\"DADOS_INVALIDOS\");\n});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"cliente\": {\n    \"nome\": \"Maria Silva\",\n    \"email\": \"email_invalido\",\n    \"cep\": \"01310-100\"\n  },\n  \"itens\": [\n    {\n      \"produtoId\": \"P001\",\n      \"quantidade\": 1\n    }\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        },
+                        "description": "Rejeicao para email fora de padrao com 422."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-04 - Rejeicao CEP Invalido (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {\n    pm.response.to.have.status(422);\n});\n\npm.test(\"Erro DADOS_INVALIDOS no campo cep\", function () {\n    const res = pm.response.json();\n    pm.expect(res.erro.codigo).to.eql(\"DADOS_INVALIDOS\");\n});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"cliente\": {\n    \"nome\": \"Maria Silva\",\n    \"email\": \"maria@teste.com\",\n    \"cep\": \"123\"\n  },\n  \"itens\": [\n    {\n      \"produtoId\": \"P001\",\n      \"quantidade\": 1\n    }\n  ]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        },
+                        "description": "Rejeicao para CEP diferente de 8 digitos com 422."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-05 - Calculo Itens Vazios (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {",
+                                    "    pm.response.to.have.status(422);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo ITENS_OBRIGATORIOS\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"ITENS_OBRIGATORIOS\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"itens\": []\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        },
+                        "description": "Rejeicao para lista de itens vazia."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-06 - Calculo Item Incompleto (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {",
+                                    "    pm.response.to.have.status(422);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo ITEM_INVALIDO\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"ITEM_INVALIDO\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"itens\": [\n    {\n      \"produtoId\": \"P001\"\n    }\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        },
+                        "description": "Rejeicao para item sem quantidade com 422."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-07 - Calculo Produto Inexistente (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {",
+                                    "    pm.response.to.have.status(422);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo PRODUTO_NAO_ENCONTRADO\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"PRODUTO_NAO_ENCONTRADO\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"itens\": [\n    {\n      \"produtoId\": \"P999\",\n      \"quantidade\": 1\n    }\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        },
+                        "description": "Rejeicao para produto P999 inexistente."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-08 - Calculo Produto Duplicado (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {",
+                                    "    pm.response.to.have.status(422);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo ITEM_DUPLICADO\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"ITEM_DUPLICADO\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"itens\": [\n    {\n      \"produtoId\": \"P001\",\n      \"quantidade\": 1\n    },\n    {\n      \"produtoId\": \"P001\",\n      \"quantidade\": 2\n    }\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        },
+                        "description": "Rejeicao para produto duplicado no array."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-09 - Calculo Quantidade Invalida (422)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 422 Unprocessable Entity\", function () {",
+                                    "    pm.response.to.have.status(422);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo QUANTIDADE_INVALIDA\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"QUANTIDADE_INVALIDA\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"itens\": [\n    {\n      \"produtoId\": \"P001\",\n      \"quantidade\": 0\n    }\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        },
+                        "description": "Rejeicao para quantidade zero com 422."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-10 - Catalogo Listagem Geral (200)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna catalogo de produtos valido\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res).to.be.an(\"array\");",
+                                    "    pm.expect(res.length).to.be.above(0);",
+                                    "    pm.expect(res[0]).to.have.property(\"id\");",
+                                    "    pm.expect(res[0]).to.have.property(\"nome\");",
+                                    "    pm.expect(res[0]).to.have.property(\"preco\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/produtos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "produtos"
+                            ]
+                        },
+                        "description": "Listagem geral de produtos do catalogo."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-11 - Catalogo Consulta Produto por ID (200)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna dados da Camiseta Essencial\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.id).to.eql(\"P001\");",
+                                    "    pm.expect(res.nome).to.eql(\"Camiseta Essencial\");",
+                                    "    pm.expect(res.preco).to.eql(59.9);",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/produtos/P001",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "produtos",
+                                "P001"
+                            ]
+                        },
+                        "description": "Consulta do produto P001 no catalogo."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-12 - Catalogo Produto Inexistente (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 404 Not Found\", function () {",
+                                    "    pm.response.to.have.status(404);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo PRODUTO_NAO_ENCONTRADO\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"PRODUTO_NAO_ENCONTRADO\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/produtos/P999",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "produtos",
+                                "P999"
+                            ]
+                        },
+                        "description": "Consulta de produto inexistente P999 com 404."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-13 - Erro JSON Malformado (400)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 400 Bad Request\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo JSON_INVALIDO\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"JSON_INVALIDO\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{ \"itens\": [ json_invalido_sem_fechamento }"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/carrinho/calcular",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "carrinho",
+                                "calcular"
+                            ]
+                        },
+                        "description": "Envio de JSON malformado retornando 400."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-14 - Erro Rota Inexistente (404)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 404 Not Found\", function () {",
+                                    "    pm.response.to.have.status(404);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo ROTA_NAO_ENCONTRADA\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"ROTA_NAO_ENCONTRADA\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/rota-inexistente-123",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "rota-inexistente-123"
+                            ]
+                        },
+                        "description": "Acesso a rota inexistente retornando 404."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "CT-REG-15 - Erro Metodo Nao Permitido (405)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test(\"Status code e 405 Method Not Allowed\", function () {",
+                                    "    pm.response.to.have.status(405);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Retorna codigo METODO_NAO_PERMITIDO\", function () {",
+                                    "    const res = pm.response.json();",
+                                    "    pm.expect(res.erro.codigo).to.eql(\"METODO_NAO_PERMITIDO\");",
+                                    "});"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/pedidos",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "pedidos"
+                            ]
+                        },
+                        "description": "Metodo HTTP nao permitido retornando 405."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
